@@ -15,4 +15,9 @@ public class TaskSpecification {
         return (root, query, criteriaBuilder) -> (deadLine==null) ? null
                 : criteriaBuilder.lessThanOrEqualTo(root.get("deadLine"), deadLine);
     }
+
+    public static Specification<Task> hasStatus(Status status){
+        return (root, query, criteriaBuilder) -> (status==null) ?
+                null :criteriaBuilder.equal(root.get("status"), status);
+    }
 }

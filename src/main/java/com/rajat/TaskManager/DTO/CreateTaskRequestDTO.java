@@ -3,6 +3,7 @@ package com.rajat.TaskManager.DTO;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.rajat.TaskManager.Model.Priority;
+import com.rajat.TaskManager.Model.Status;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,6 +20,14 @@ public class CreateTaskRequestDTO {
 //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssX", timezone = "UTC")
     private Instant deadLine;
     private List<String> tags;
+    private Status status;
+
+    public void setStatus(Status status){
+        this.status = status;
+    }
+    public Status getStatus(){
+        return status;
+    }
 
     public void setTitle(String title){
         this.title = title;

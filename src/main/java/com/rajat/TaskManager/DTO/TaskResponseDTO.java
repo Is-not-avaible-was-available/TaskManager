@@ -2,6 +2,7 @@ package com.rajat.TaskManager.DTO;
 
 
 import com.rajat.TaskManager.Model.Priority;
+import com.rajat.TaskManager.Model.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,14 @@ public class TaskResponseDTO {
     private Priority priority;
     private Instant deadLine;
     private List<String> tags;
+    private Status status;
+
+    public void setStatus(Status status){
+        this.status = status;
+    }
+    public Status getStatus(){
+        return status;
+    }
 
     public void setTitle(String title){
         this.title = title;

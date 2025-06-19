@@ -5,6 +5,7 @@ import com.rajat.TaskManager.DTO.CreateTaskRequestDTO;
 import com.rajat.TaskManager.DTO.TaskResponseDTO;
 import com.rajat.TaskManager.Exception.TaskNotFoundException;
 import com.rajat.TaskManager.Model.Priority;
+import com.rajat.TaskManager.Model.Status;
 import com.rajat.TaskManager.Service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -72,7 +73,16 @@ public class TaskController {
     @GetMapping("/filter")
     public ResponseEntity<List<TaskResponseDTO>> filterTasks(@RequestParam (required = false)
                                                                  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)Instant deadLine,
-                                                             @RequestParam (required = false) Priority priority){
+                                                             @RequestParam (required = false) Priority priority, @RequestParam Status status){
       return ResponseEntity.ok(taskService.filterTasks(deadLine, priority));
+    }
+
+    @PutMapping("/{id}/complete")
+    public ResponseEntity<?> markAsComplete(@PathVariable int id) {
+        try {
+            return ResponseEntity.ok(taskService.markTaskAsComplete(id));
+        } catch (TaskNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 }

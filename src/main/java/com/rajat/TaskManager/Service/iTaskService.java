@@ -6,6 +6,7 @@ import com.rajat.TaskManager.DTO.TaskResponseDTO;
 import com.rajat.TaskManager.Exception.TaskNotFoundException;
 import com.rajat.TaskManager.Mapper.TaskToTaskDTOMapper;
 import com.rajat.TaskManager.Model.Priority;
+import com.rajat.TaskManager.Model.Status;
 import com.rajat.TaskManager.Model.Task;
 import com.rajat.TaskManager.Model.TaskSpecification;
 import com.rajat.TaskManager.Repository.TaskRepository;
@@ -76,6 +77,7 @@ public class iTaskService implements TaskService{
         task.setDeadLine(requestDTO.getDeadLine());
         task.setPriority(requestDTO.getPriority());
         task.setTags(requestDTO.getTags());
+        task.setStatus(requestDTO.getStatus() != null ? requestDTO.getStatus() : Status.PENDING);
         Task savedTask = taskRepository.save(task);
         return taskToTaskDTOMapper.taskToResponseDTO(savedTask);
     }
@@ -90,7 +92,7 @@ public class iTaskService implements TaskService{
     }
 
 
-    public List<TaskResponseDTO> filterTasks(Instant deadLine, Priority priority){
+    public List<TaskResponseDTO> filterTasks(Instant deadLine, Priority priority, Status status){
         Specification<Task> specification = ((root, query, criteriaBuilder) -> criteriaBuilder.conjunction());
 
         if(deadLine !=null){
@@ -101,8 +103,19 @@ public class iTaskService implements TaskService{
             specification = specification.and(TaskSpecification.hasPriority(priority));
         }
 
+        if(status!=null){
+            specification = specification.and(TaskSpecification.hasStatus(status));
+        }
         List<Task> tasks = taskRepository.findAll(specification);
 
         return tasks.stream().map(taskToTaskDTOMapper:: taskToResponseDTO).toList();
+    }
+
+    @Override
+    public TaskResponseDTO markTaskAsComplete(int id) throws TaskNotFoundException {
+        Task task = taskRepository.findById(id).
+                orElseThrow(()-> new TaskNotFoundException("Task with id: " +id+ " is not found!"));
+        task.setStatus(Status.COMPLETED);
+        return taskToTaskDTOMapper.taskToResponseDTO(taskRepository.save(task));
     }
 }

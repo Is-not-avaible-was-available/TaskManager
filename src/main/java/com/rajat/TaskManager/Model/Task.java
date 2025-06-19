@@ -2,10 +2,7 @@ package com.rajat.TaskManager.Model;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.*;
 
 import java.time.Instant;
 import java.util.List;
@@ -22,6 +19,17 @@ public class Task extends BaseModel{
     private Instant deadLine;
     @ElementCollection
     private List<String> tags;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Status status;
+
+    public void setStatus(Status status){
+        this.status = status;
+    }
+    public Status getStatus(){
+        return status;
+    }
 
     public void setTitle(String title){
         this.title = title;
