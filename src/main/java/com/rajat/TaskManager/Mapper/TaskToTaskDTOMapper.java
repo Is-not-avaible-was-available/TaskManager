@@ -12,6 +12,9 @@ public class TaskToTaskDTOMapper {
         responseDTO.setId(task.getId());
         responseDTO.setTitle(task.getTitle());
         responseDTO.setDescription(task.getDescription());
+        responseDTO.setTags(task.getTags());
+        responseDTO.setPriority(task.getPriority());
+        responseDTO.setDeadLine(task.getDeadLine());
         return responseDTO;
     }
 }

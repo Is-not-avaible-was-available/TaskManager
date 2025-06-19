@@ -4,13 +4,16 @@ package com.rajat.TaskManager.Controller;
 import com.rajat.TaskManager.DTO.CreateTaskRequestDTO;
 import com.rajat.TaskManager.DTO.TaskResponseDTO;
 import com.rajat.TaskManager.Exception.TaskNotFoundException;
+import com.rajat.TaskManager.Model.Priority;
 import com.rajat.TaskManager.Service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.util.List;
 
 @RestController
@@ -65,5 +68,11 @@ public class TaskController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
         return ResponseEntity.ok("Task deleted successfully.");
+    }
+    @GetMapping("/filter")
+    public ResponseEntity<List<TaskResponseDTO>> filterTasks(@RequestParam (required = false)
+                                                                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)Instant deadLine,
+                                                             @RequestParam (required = false) Priority priority){
+      return ResponseEntity.ok(taskService.filterTasks(deadLine, priority));
     }
 }
