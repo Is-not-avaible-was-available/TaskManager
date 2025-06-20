@@ -3,6 +3,7 @@ package com.rajat.TaskManager.Controller;
 
 import com.rajat.TaskManager.DTO.CreateTaskRequestDTO;
 import com.rajat.TaskManager.DTO.TaskResponseDTO;
+import com.rajat.TaskManager.DTO.TaskSummaryDTO;
 import com.rajat.TaskManager.Exception.TaskNotFoundException;
 import com.rajat.TaskManager.Model.Priority;
 import com.rajat.TaskManager.Model.Status;
@@ -74,7 +75,7 @@ public class TaskController {
     public ResponseEntity<List<TaskResponseDTO>> filterTasks(@RequestParam (required = false)
                                                                  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)Instant deadLine,
                                                              @RequestParam (required = false) Priority priority, @RequestParam Status status){
-      return ResponseEntity.ok(taskService.filterTasks(deadLine, priority));
+      return ResponseEntity.ok(taskService.filterTasks(deadLine, priority, status));
     }
 
     @PutMapping("/{id}/complete")
@@ -84,5 +85,11 @@ public class TaskController {
         } catch (TaskNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
+    }
+
+    @GetMapping("/summary")
+    public ResponseEntity<TaskSummaryDTO> getSummaryDTO(){
+        TaskSummaryDTO summaryDTO = taskService.getTaskSummary();
+        return ResponseEntity.ok(summaryDTO);
     }
 }

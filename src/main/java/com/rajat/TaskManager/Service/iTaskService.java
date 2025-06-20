@@ -3,6 +3,7 @@ package com.rajat.TaskManager.Service;
 
 import com.rajat.TaskManager.DTO.CreateTaskRequestDTO;
 import com.rajat.TaskManager.DTO.TaskResponseDTO;
+import com.rajat.TaskManager.DTO.TaskSummaryDTO;
 import com.rajat.TaskManager.Exception.TaskNotFoundException;
 import com.rajat.TaskManager.Mapper.TaskToTaskDTOMapper;
 import com.rajat.TaskManager.Model.Priority;
@@ -15,6 +16,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -117,5 +119,48 @@ public class iTaskService implements TaskService{
                 orElseThrow(()-> new TaskNotFoundException("Task with id: " +id+ " is not found!"));
         task.setStatus(Status.COMPLETED);
         return taskToTaskDTOMapper.taskToResponseDTO(taskRepository.save(task));
+    }
+
+    @Override
+    public TaskSummaryDTO getTaskSummary() {
+        List<Task> tasks = taskRepository.findAll();
+        Instant now = Instant.now();
+
+        TaskSummaryDTO taskSummaryDTO = new TaskSummaryDTO();
+        taskSummaryDTO.setTotalTasks(tasks.size());
+        int count = 0;
+        for (Task element : tasks) {
+            if (element.getStatus().equals(Status.COMPLETED)) {
+                count++;
+            }
+        }
+
+        taskSummaryDTO.setCompletedTasks(count);
+        int priorityCount = 0;
+        for (Task item : tasks) {
+            if (item.getPriority().equals(Priority.HIGH) && item.getPriority()!=null) {
+                priorityCount++;
+            }
+        }
+
+        taskSummaryDTO.setHighPriorityCount(priorityCount);
+        int pendingCount = 0;
+        for (Task value : tasks) {
+            if (value.getStatus().equals(Status.PENDING)) {
+                pendingCount++;
+            }
+        }
+
+        taskSummaryDTO.setPendingTasks(pendingCount);
+        int deadLineCount = 0;
+        for (Task task : tasks) {
+            Instant deadLine = task.getDeadLine();
+           if(deadLine.isAfter(now) && deadLine.isBefore(now.plus(1, ChronoUnit.DAYS))){
+               deadLineCount++;
+           }
+        }
+
+        taskSummaryDTO.setDueToday(deadLineCount);
+        return taskSummaryDTO;
     }
 }

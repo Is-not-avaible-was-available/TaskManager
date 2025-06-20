@@ -2,6 +2,7 @@ package com.rajat.TaskManager.Service;
 
 import com.rajat.TaskManager.DTO.CreateTaskRequestDTO;
 import com.rajat.TaskManager.DTO.TaskResponseDTO;
+import com.rajat.TaskManager.DTO.TaskSummaryDTO;
 import com.rajat.TaskManager.Exception.TaskNotFoundException;
 import com.rajat.TaskManager.Model.Priority;
 import com.rajat.TaskManager.Model.Status;
@@ -19,4 +20,6 @@ public interface TaskService {
     public List<TaskResponseDTO> filterTasks(Instant deadLine, Priority priority, Status status);
 
     public TaskResponseDTO markTaskAsComplete(int id) throws TaskNotFoundException;
+
+    public TaskSummaryDTO getTaskSummary();
 }
