@@ -11,6 +11,7 @@ import com.rajat.TaskManager.Model.Status;
 import com.rajat.TaskManager.Model.Task;
 import com.rajat.TaskManager.Model.TaskSpecification;
 import com.rajat.TaskManager.Repository.TaskRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
